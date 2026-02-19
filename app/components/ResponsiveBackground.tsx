@@ -1,15 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import Image from "next/image";
+
 
 import svgPaths from "../imports/svg-fo73us6i1o";
 import { imgTransition } from "../imports/svg-psl46";
 
 const imgAbstractConnection =
   "/assets/b170ca6fdee988b2dc9887b841d001a7bdd1dfce.png";
-const imgZutIsland = "/assets/4bc9574431d9787ae40236108382b161a5adf868.png";
+const imgZutIsland =
+  "/assets/4bc9574431d9787ae40236108382b161a5adf868.png";
 
 const fadeInUpVariants = {
   hidden: { opacity: 0, y: 18 },
@@ -572,7 +574,10 @@ export default function ResponsiveBackground() {
             preserveAspectRatio="none"
             viewBox="0 0 1440 120"
           >
-            <path d={svgPaths.p281a3f80} fill="#F8FAFC" />
+            <path
+  d="M0 64C120 90 240 104 360 96C480 88 600 60 720 48C840 36 960 40 1080 56C1200 72 1320 98 1440 108V120H0V64Z"
+  fill="#F8FAFC"
+/>
           </svg>
         </div>
       </motion.section>
@@ -738,17 +743,8 @@ export default function ResponsiveBackground() {
           </motion.div>
         </div>
 
-        <div
-          className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-[#f8fafc] to-white"
-          style={{
-            maskImage: `url('${imgTransition}')`,
-            WebkitMaskImage: `url('${imgTransition}')`,
-            maskSize: "100% 100px",
-            WebkitMaskSize: "100% 100px",
-            maskRepeat: "no-repeat",
-            WebkitMaskRepeat: "no-repeat",
-          }}
-        />
+        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-[#f8fafc] to-white" />
+
       </section>
 
       {/* Instruments */}
