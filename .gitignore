@@ -1,0 +1,12 @@
+# build outputs
+.next/
+out/
+
+# deps
+node_modules/
+
+# logs
+*.log
+
+# vercel
+.vercel/
