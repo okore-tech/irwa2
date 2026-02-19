@@ -8,8 +8,6 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import svgPaths from "../imports/svg-fo73us6i1o";
 import { imgTransition } from "../imports/svg-psl46";
 
-const imgAbstractConnection =
-  "/assets/b170ca6fdee988b2dc9887b841d001a7bdd1dfce.png";
 const imgZutIsland =
   "/assets/4bc9574431d9787ae40236108382b161a5adf868.png";
 
@@ -193,15 +191,15 @@ export default function ResponsiveBackground() {
       title: "Zut Island",
       desc: "Olive trees on a Croatian island. Meditation and wellbeing through nature.",
       impact: "Meditation & wellbeing centres",
-      href: "https://zutisland.com",
+      href: "https://zut.digital",
     },
     {
-      tag: "Modern Slavery",
+      tag: "Coming soon",
       img: "/assets/ev-mineral.jpg",
       title: "EV Minerals",
       desc: "Connecting EV drivers to ethical mineral sourcing across 770,400 km².",
       impact: "Child education & health centres",
-      href: "https://evminerals.com",
+      href: "",
     },
   ];
 
@@ -510,14 +508,7 @@ export default function ResponsiveBackground() {
                   }}
                   className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl bg-gray-100 ring-1 ring-black/5"
                 >
-                  <Image
-                    src={imgAbstractConnection}
-                    alt="Abstract connection"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 520px"
-                    className="object-cover"
-                    priority
-                  />
+                  {/* Image removed due to deployment issues */}
                 </motion.div>
 
                 {/* Floating info */}
@@ -929,20 +920,26 @@ export default function ResponsiveBackground() {
                   </div>
 
                   <div className="pt-3 border-t border-black/5 flex items-center justify-between">
-                    <a
-                      href={p.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-sm text-black/60 hover:text-black underline underline-offset-4"
-                    >
-                      Visit project website
-                    </a>
-                    <a
-                      href="#cta"
-                      className="text-sm font-semibold text-[#ff272a] hover:opacity-80"
-                    >
-                      Tokenize →
-                    </a>
+                    {p.title === "EV Minerals" ? (
+                      <span className="text-sm text-black/30 italic">Coming soon</span>
+                    ) : (
+                      <>
+                        <a
+                          href={p.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm text-black/60 hover:text-black underline underline-offset-4"
+                        >
+                          Visit project website
+                        </a>
+                        <a
+                          href="#cta"
+                          className="text-sm font-semibold text-[#ff272a] hover:opacity-80"
+                        >
+                          Tokenize →
+                        </a>
+                      </>
+                    )}
                   </div>
                 </div>
               </motion.article>
@@ -1021,20 +1018,26 @@ export default function ResponsiveBackground() {
                       </div>
 
                       <div className="pt-4 border-t border-black/5 flex items-center justify-between">
-                        <a
-                          href={p.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-sm text-black/60 hover:text-black underline underline-offset-4"
-                        >
-                          Visit project website
-                        </a>
-                        <a
-                          href="#cta"
-                          className="text-sm font-semibold text-[#ff272a] hover:opacity-80"
-                        >
-                          Tokenize →
-                        </a>
+                        {p.title === "EV Minerals" ? (
+                          <span className="text-sm text-black/30 italic">Coming soon</span>
+                        ) : (
+                          <>
+                            <a
+                              href={p.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-sm text-black/60 hover:text-black underline underline-offset-4"
+                            >
+                              Visit project website
+                            </a>
+                            <a
+                              href="#cta"
+                              className="text-sm font-semibold text-[#ff272a] hover:opacity-80"
+                            >
+                              Tokenize →
+                            </a>
+                          </>
+                        )}
                       </div>
                     </div>
                   </motion.article>
