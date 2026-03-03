@@ -386,63 +386,76 @@ export default function ResponsiveBackground() {
 <section
   id="hero"
   className="relative min-h-screen flex items-center overflow-hidden 
-  bg-gradient-to-br from-slate-50 via-white to-indigo-50 text-[#0b0f19]"
+  bg-gradient-to-br from-slate-50 via-white to-indigo-50 text-slate-900"
 >
-  {/* Animated mesh gradient */}
-  {/* Soft colour therapy glows */}
-  <div className="absolute top-[-200px] left-[-150px] w-[500px] h-[500px] bg-indigo-200/40 blur-3xl rounded-full" />
-  <div className="absolute bottom-[-200px] right-[-150px] w-[500px] h-[500px] bg-rose-200/40 blur-3xl rounded-full" />
+  {/* Soft colour-therapy field */}
+  <div className="absolute -top-44 -left-40 w-[520px] h-[520px] bg-indigo-200/50 blur-3xl rounded-full" />
+  <div className="absolute top-16 right-[-90px] w-[420px] h-[420px] bg-sky-200/40 blur-3xl rounded-full" />
+  <div className="absolute bottom-[-140px] left-1/3 w-[480px] h-[480px] bg-rose-200/35 blur-3xl rounded-full" />
+  <div className="absolute bottom-[-180px] right-[-120px] w-[460px] h-[460px] bg-amber-200/35 blur-3xl rounded-full" />
 
-  {/* Subtle grid */}
-  <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:60px_60px]" />
+  {/* Ambient texture */}
+  <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:64px_64px]" />
+  <div className="absolute inset-0 opacity-[0.12] bg-[radial-gradient(circle_at_20%_20%,#ffffff,transparent_50%),radial-gradient(circle_at_80%_10%,#f0f9ff,transparent_40%),radial-gradient(circle_at_60%_90%,#fdf2f8,transparent_45%)]" />
 
-  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-24 py-16 sm:py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+  <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-24 py-20 md:py-24 lg:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
     {/* LEFT SIDE */}
-    <div className="space-y-6 sm:space-y-8 lg:order-1">
+    <div className="relative z-20 space-y-6 sm:space-y-8 lg:order-1">
 
-      <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-        <span className="w-2 h-2 bg-[#ff272a] rounded-full animate-pulse" />
-        <span className="text-xs tracking-wide uppercase text-white/70">
+      <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/80 border border-rose-100 text-slate-700 backdrop-blur-md shadow-sm">
+        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#ff272a] to-[#ff7a45] animate-pulse" />
+        <span className="text-xs tracking-[0.14em] uppercase font-semibold">
           Intangible Real World Assets
         </span>
       </div>
 
-<h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[1.05]">
-          Tokenize the{" "}
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-pink-400 to-red-400 animate-gradient">
+      <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.05] tracking-tight text-slate-900">
+        Tokenize the{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45]">
           connection
         </span>
-        , not the asset.
+        , not the assets.
       </h1>
 
-<p className="text-white/70 text-lg max-w-xl leading-relaxed">
-  We measure, transact, and reward your connection to assets:
-</p>
+      <p className="text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
+        We measure, transact, and reward connection to culture, belief, faith, energy, sport, and community.
+      </p>
 
-<div className="text-xl md:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-pink-400 to-red-400">
-  Values • Ideology • Opinion • Faith • Belief
-</div>
+      <div className="text-base md:text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45]">
+        Values • Ideology • Opinion • Faith • Belief
+      </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
         <a
           href="#cta"
-          className="px-7 py-4 rounded-2xl bg-[#ff272a] font-semibold shadow-lg hover:shadow-red-500/30 transition text-center sm:text-left"
+          className="px-7 py-4 rounded-2xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white font-semibold shadow-[0_12px_30px_rgba(255,39,42,0.28)] hover:shadow-[0_14px_36px_rgba(255,79,139,0.34)] transition text-center sm:text-left"
         >
           Build with us
         </a>
         <a
           href="/evolution"
-          className="px-7 py-4 rounded-2xl border border-white/20 text-white/80 hover:bg-white/5 transition text-center sm:text-left"
+          className="px-7 py-4 rounded-2xl border border-rose-200 bg-white/90 text-[#b42336] font-semibold hover:bg-rose-50 hover:border-rose-300 hover:text-[#8f1d2c] transition text-center sm:text-left"
         >
           Our Evolution
+        </a>
+        <a
+          href="/instruments"
+          className="px-7 py-4 rounded-2xl border border-rose-200 bg-white/90 text-[#b42336] font-semibold hover:bg-rose-50 hover:border-rose-300 hover:text-[#8f1d2c] transition text-center sm:text-left"
+        >
+          Instruments
         </a>
       </div>
     </div>
 
     {/* RIGHT SIDE — 3D CURVED CAROUSEL */}
-    <div className="flex justify-center lg:justify-end w-full lg:order-2">
-      <Hero3DCarousel />
+    <div className="relative z-10 flex justify-center lg:justify-end w-full lg:order-2">
+      <div className="relative w-full max-w-[560px] overflow-hidden rounded-[36px] p-5 sm:p-7 bg-white/75 backdrop-blur-xl border border-white/80 ring-1 ring-rose-100 shadow-[0_30px_80px_rgba(255,39,42,0.16)]">
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-100/40 via-transparent to-amber-100/40 pointer-events-none" />
+        <div className="relative">
+          <Hero3DCarousel />
+        </div>
+      </div>
     </div>
 
   </div>
@@ -754,219 +767,128 @@ export default function ResponsiveBackground() {
         </div>
       </section>
 
-      {/* Projects (mobile = swipe carousel + snap + dots + auto-centering) */}
       <section
         id="projects"
-        className="scroll-mt-24 bg-white px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
+        className="scroll-mt-24 bg-gradient-to-br from-rose-50 via-white to-orange-50 px-6 lg:px-24 py-20"
       >
-        <div className="max-w-6xl mx-auto space-y-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={fadeInUpVariants}
-            transition={{ duration: reduceMotion ? 0 : 0.6 }}
-            className="text-center space-y-4"
-          >
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Current Projects
-            </h2>
-            <p className="text-black/65 text-base md:text-lg max-w-2xl mx-auto">
-              Each project has its own branded token — all interoperable and
-              swappable on public exchanges.
-            </p>
-          </motion.div>
+        <div className="max-w-7xl mx-auto space-y-16">
 
-          {/* Desktop grid */}
-          <div className="hidden md:grid grid-cols-3 gap-6 md:gap-8 items-stretch">
+          {/* Header */}
+          <div className="text-center space-y-6">
+            <h2 className="text-4xl md:text-6xl font-semibold tracking-tight">
+              Public Exchange Projects
+            </h2>
+            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+              Each project operates with its own token — interoperable within the iRWA ecosystem.
+            </p>
+          </div>
+
+          {/* Grid */}
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10">
+
             {PROJECTS.map((p, idx) => (
-              <motion.article
+              <div
                 key={p.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewportCards}
-                variants={scaleInVariants}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.55,
-                  delay: reduceMotion ? 0 : idx * 0.06,
-                }}
-                whileHover={reduceMotion ? undefined : { y: -8 }}
-                className="bg-white rounded-2xl overflow-hidden border border-black/5 shadow-sm"
+                className="
+                  group
+                  rounded-[32px]
+                  bg-white/70
+                  backdrop-blur-xl
+                  border border-slate-200
+                  shadow-xl
+                  hover:shadow-2xl
+                  transition
+                  overflow-hidden
+                "
               >
-                <div className="relative h-52 bg-gray-100">
-                  <span className="absolute top-4 left-4 z-10 inline-flex items-center rounded-full bg-[#ff272a] px-4 py-2 text-xs font-semibold text-white shadow-sm">
-                    {p.tag}
+
+                {/* Image */}
+                <div className="relative h-56 overflow-hidden">
+                  <span className="absolute top-5 left-5 z-10 px-4 py-2 text-xs font-semibold rounded-full bg-gradient-to-r from-[#ff272a] to-[#ff4f8b] text-white shadow">
+                    Public Exchange Token
                   </span>
+
                   <Image
                     src={p.img}
                     alt={p.title}
                     fill
-                    sizes="(max-width: 1024px) 33vw, 360px"
-                    className="object-cover"
+                    className="object-cover group-hover:scale-105 transition duration-500"
                   />
                 </div>
 
-                <div className="p-6 space-y-3">
-                  <h3 className="text-xl font-bold text-black">{p.title}</h3>
-                  <p className="text-black/60 leading-relaxed">{p.desc}</p>
+                {/* Content */}
+                <div className="p-8 space-y-6">
 
-                  <div className="pt-2">
-                    <div className="flex items-center gap-2 text-sm text-[#ff272a]">
-                      <span className="inline-block w-2 h-2 rounded-full bg-[#ff272a]" />
-                      <span className="font-medium">{p.impact}</span>
+                  <h3 className="text-2xl font-semibold">
+                    {p.title}
+                  </h3>
+
+                  {/* Benefits Block */}
+                  <div className="space-y-3 text-sm text-slate-600">
+
+                    <div className="flex gap-2 items-start">
+                      <span className="w-2 h-2 mt-2 bg-[#ff4f8b] rounded-full" />
+                      <span>Brand discounts</span>
                     </div>
+
+                    <div className="flex gap-2 items-start">
+                      <span className="w-2 h-2 mt-2 bg-[#ff4f8b] rounded-full" />
+                      <span>Partner experiences</span>
+                    </div>
+
+                    <div className="flex gap-2 items-start">
+                      <span className="w-2 h-2 mt-2 bg-[#ff4f8b] rounded-full" />
+                      <span>Prize draws</span>
+                    </div>
+
+                    <div className="flex gap-2 items-start">
+                      <span className="w-2 h-2 mt-2 bg-[#ff4f8b] rounded-full" />
+                      <span>Tier-based access</span>
+                    </div>
+
                   </div>
 
-                  <div className="pt-3 border-t border-black/5 flex items-center justify-between">
-                    {p.title === "EV Minerals" ? (
-                      <span className="text-sm text-black/30 italic">Coming soon</span>
-                    ) : (
+                  {/* Impact Signal */}
+                  <div className="pt-4 border-t border-slate-200 text-sm text-slate-500">
+                    Impact focus: <span className="font-medium text-[#c81f34]">{p.impact}</span>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="pt-4 flex items-center justify-between">
+
+                    {p.href ? (
                       <>
                         <a
                           href={p.href}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-sm text-black/60 hover:text-black underline underline-offset-4"
+                          className="text-sm text-slate-500 hover:text-slate-900 underline underline-offset-4"
                         >
-                          Visit project website
+                          Visit project →
                         </a>
+
                         <a
                           href="#cta"
-                          className="text-sm font-semibold text-[#ff272a] hover:opacity-80"
+                          className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white text-sm font-semibold shadow-[0_8px_18px_rgba(255,39,42,0.24)] hover:shadow-[0_10px_24px_rgba(255,79,139,0.32)] transition"
                         >
-                          Tokenize →
+                          Participate
                         </a>
                       </>
-                    )}
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-
-          {/* Mobile swipe carousel */}
-          <div className="md:hidden">
-            <div className="relative">
-              <div
-                ref={projectsScrollerRef}
-                onScroll={onProjectsScroll}
-                className={cx(
-                  "flex gap-4 overflow-x-auto",
-                  "scroll-smooth",
-                  "snap-x snap-mandatory",
-                  "px-2 -mx-2",
-                  "pb-3",
-                  "[scrollbar-width:none] [-ms-overflow-style:none]",
-                  "touch-pan-x"
-                )}
-                style={{
-                  WebkitOverflowScrolling: "touch",
-                }}
-              >
-                {/* hide webkit scrollbar */}
-                <style jsx>{`
-                  div::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
-
-                {PROJECTS.map((p, idx) => (
-                  <motion.article
-                    key={p.title}
-                    ref={(el) => {
-                      projectCardRefs.current[idx] = el as HTMLDivElement | null;
-                    }}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                    variants={scaleInVariants}
-                    transition={{ duration: reduceMotion ? 0 : 0.45 }}
-                    className={cx(
-                      "snap-center",
-                      "min-w-[86%] sm:min-w-[78%]",
-                      "rounded-3xl overflow-hidden",
-                      "border border-black/5 bg-white shadow-sm",
-                      "ring-1 ring-black/[0.03]"
-                    )}
-                  >
-                    <div className="relative h-52 bg-gray-100">
-                      <span className="absolute top-4 left-4 z-10 inline-flex items-center rounded-full bg-[#ff272a] px-4 py-2 text-xs font-semibold text-white shadow-sm">
-                        {p.tag}
+                    ) : (
+                      <span className="text-sm text-slate-400 italic">
+                        Coming soon
                       </span>
-                      <Image
-                        src={p.img}
-                        alt={p.title}
-                        fill
-                        sizes="(max-width: 768px) 90vw, 360px"
-                        className="object-cover"
-                      />
-                      {/* premium overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
-                    </div>
+                    )}
 
-                    <div className="p-6 space-y-3">
-                      <h3 className="text-xl font-bold text-black">{p.title}</h3>
-                      <p className="text-black/60 leading-relaxed">{p.desc}</p>
+                  </div>
 
-                      <div className="pt-2">
-                        <div className="flex items-center gap-2 text-sm text-[#ff272a]">
-                          <span className="inline-block w-2 h-2 rounded-full bg-[#ff272a]" />
-                          <span className="font-medium">{p.impact}</span>
-                        </div>
-                      </div>
+                </div>
 
-                      <div className="pt-4 border-t border-black/5 flex items-center justify-between">
-                        {p.title === "EV Minerals" ? (
-                          <span className="text-sm text-black/30 italic">Coming soon</span>
-                        ) : (
-                          <>
-                            <a
-                              href={p.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-sm text-black/60 hover:text-black underline underline-offset-4"
-                            >
-                              Visit project website
-                            </a>
-                            <a
-                              href="#cta"
-                              className="text-sm font-semibold text-[#ff272a] hover:opacity-80"
-                            >
-                              Tokenize →
-                            </a>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </motion.article>
-                ))}
               </div>
+            ))}
 
-              {/* Dots (tap to jump + tracked while scrolling) */}
-              <div className="mt-4 flex items-center justify-center gap-2">
-                {PROJECTS.map((_, idx) => {
-                  const active = idx === activeProject;
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      aria-label={`Go to project ${idx + 1}`}
-                      onClick={() => scrollToProject(idx)}
-                      className={cx(
-                        "h-2.5 rounded-full transition-all",
-                        active ? "w-8 bg-[#0b0f19]" : "w-2.5 bg-black/20"
-                      )}
-                    />
-                  );
-                })}
-              </div>
-
-              {/* small hint */}
-              <p className="mt-3 text-center text-xs text-black/45">
-                Swipe to explore • Tap dots to jump
-              </p>
-            </div>
           </div>
+
         </div>
       </section>
 

@@ -8,73 +8,137 @@ type Mouse = { x: number; y: number };
 
 const items = [
   {
-    title: "National Treasures",
-    subtitle: "Cultural belief economies",
-    metric: "Live pilot",
-    img: "/assets/Persistence.jpeg",
-  },
-  {
-    title: "Bean You",
-    subtitle: "Coffee-backed emotional value",
-    metric: "15,000+ acres",
+    title: "BeanYou",
+    subtitle: "Coffee participation economy",
+    metric: "Retail Layer",
     img: "/assets/bean-you.jpg",
   },
   {
+    title: "National Treasures",
+    subtitle: "Art & cultural identity",
+    metric: "Belief Economy",
+    img: "/assets/Persistence.jpeg",
+  },
+  {
     title: "Zut Island",
-    subtitle: "Meditation & olive ecosystems",
-    metric: "Croatia",
+    subtitle: "Mediterranean impact ecosystem",
+    metric: "Island Culture",
     img: "/assets/4bc9574431d9787ae40236108382b161a5adf868.png",
   },
   {
-    title: "EV Minerals",
-    subtitle: "Ethical sourcing layer",
-    metric: "770,400 km²",
+    title: "EV Batteries",
+    subtitle: "Future of transport",
+    metric: "Energy Transition",
     img: "/assets/ev-mineral.jpg",
   },
+  {
+    title: "Whiskey",
+    subtitle: "Aged assets & loyalty",
+    metric: "Experience-Based",
+    img: "/assets/50ba58402031d878c19b9f7ed60c649eae10e7de.png",
+  },
+  {
+    title: "Petroleum Fields",
+    subtitle: "Energy identity markets",
+    metric: "Extraction Economy",
+    img: "/assets/53f0693371c99d212f514ffc95fb1d917115545c.png",
+  },
+  {
+    title: "Natural Ecosystem",
+    subtitle: "Rewilding & biodiversity",
+    metric: "Environmental",
+    img: "/assets/8b1a92cef097201939f3c54d05109a9eb865b3e5.png",
+  },
+  {
+    title: "Spiritual Journeys",
+    subtitle: "Pilgrimage economies",
+    metric: "Faith-Based",
+    img: "/assets/a4c5131ae8219ac19c24047be967a2d3c822f1ad.png",
+  },
+  {
+    title: "Race Tracks",
+    subtitle: "Mobility brands",
+    metric: "Sports Economy",
+    img: "/assets/a66a47c36d7207e9df02414e897290bdf14b3310.png",
+  },
+  {
+    title: "Religious Temples",
+    subtitle: "Faith ecosystems",
+    metric: "Community Belief",
+    img: "/assets/b170ca6fdee988b2dc9887b841d001a7bdd1dfce.png",
+  },
 ];
+
+const VISIBLE_SIDE_CARDS = 2;
+
+function getSignedDistance(index: number, activeIndex: number, total: number) {
+  const wrapped = (index - activeIndex + total) % total;
+  return wrapped > total / 2 ? wrapped - total : wrapped;
+}
 
 export default function Hero3DCarousel({
   mouse = { x: 0, y: 0 },
 }: {
   mouse?: Mouse;
 }) {
-  const [rotation, setRotation] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const i = setInterval(() => {
-      setRotation((r) => r + 360 / items.length);
+      setActiveIndex((prev) => (prev + 1) % items.length);
     }, 3500);
     return () => clearInterval(i);
   }, []);
 
   return (
-    <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[340px] lg:max-w-[380px] h-[280px] sm:h-[320px] md:h-[340px] lg:h-[380px] perspective-[1400px] mx-auto lg:mx-0">
+    <div className="relative w-full max-w-[220px] sm:max-w-[280px] md:max-w-[340px] lg:max-w-[380px] h-[280px] sm:h-[320px] md:h-[340px] lg:h-[380px] mx-auto lg:mx-0 [perspective:1600px]">
       <motion.div
         animate={{
-          rotateY: rotation + mouse.x * 0.4,
-          rotateX: -mouse.y * 0.3,
+          rotateY: mouse.x * 0.08,
+          rotateX: -mouse.y * 0.08,
         }}
-        transition={{ type: "spring", stiffness: 30 }}
-        className="relative w-full h-full transform-style-preserve-3d"
+        transition={{ type: "spring", stiffness: 70, damping: 16 }}
+        className="relative w-full h-full"
+        style={{ transformStyle: "preserve-3d" }}
       >
         {items.map((item, i) => {
-          const angle = (360 / items.length) * i;
+          const distance = getSignedDistance(i, activeIndex, items.length);
+          const absDistance = Math.abs(distance);
+
+          if (absDistance > VISIBLE_SIDE_CARDS) return null;
+
+          const translateX = distance * 46;
+          const translateZ = 220 - absDistance * 95;
+          const rotateY = -distance * 26;
+          const scale = 1 - absDistance * 0.1;
+          const opacity = absDistance === 0 ? 1 : absDistance === 1 ? 0.82 : 0.52;
 
           return (
             <div
               key={i}
-              className="absolute w-full h-full"
+              className="absolute inset-0 transition-[transform,opacity] duration-700 ease-out"
               style={{
-                transform: `rotateY(${angle}deg) translateZ(420px)`,
+                transform: `translateX(${translateX}%) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                opacity,
+                zIndex: 30 - absDistance,
+                transformStyle: "preserve-3d",
+                pointerEvents: absDistance === 0 ? "auto" : "none",
               }}
             >
-              <div className="relative w-full h-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+              <div
+                className="relative w-full h-full rounded-3xl overflow-hidden border border-slate-200 shadow-xl"
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              >
 
                 <Image
                   src={item.img}
                   alt={item.title}
                   fill
-                  className="object-cover opacity-90"
+                  className="object-cover"
+                  sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, (max-width: 1024px) 340px, 380px"
                 />
 
                 {/* Gloss reflection */}
@@ -86,9 +150,11 @@ export default function Hero3DCarousel({
                   }}
                 />
 
-                <div className="absolute bottom-0 w-full p-5 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/25" />
+
+                <div className="absolute bottom-0 w-full p-5 bg-gradient-to-t from-black/40 via-black/20 to-transparent">
                   <div className="space-y-1">
-                    <div className="text-sm font-semibold text-white">
+                    <div className="text-sm font-semibold shimmer-text">
                       {item.title}
                     </div>
                     <div className="text-xs text-white/70">
@@ -105,6 +171,20 @@ export default function Hero3DCarousel({
           );
         })}
       </motion.div>
+
+      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
+        {items.map((item, i) => (
+          <button
+            key={item.title}
+            type="button"
+            onClick={() => setActiveIndex(i)}
+            aria-label={`Show ${item.title}`}
+            className={`h-1.5 rounded-full transition-all ${
+              i === activeIndex ? "w-5 bg-slate-700" : "w-1.5 bg-slate-400/70"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
