@@ -175,21 +175,24 @@ export default function ResponsiveBackground() {
 
   const cards = [
     {
+      icon: "⚡",
       title: "Instant Rewards",
-      desc: "Discounts, partner perks, prize draws.",
+      desc: "Brand discounts, partner perks, and prize draws activate the moment you participate. Your conviction pays off immediately.",
     },
     {
+      icon: "🌍",
       title: "Impact Experiences",
-      desc: "On-site visits & immersive engagement.",
+      desc: "On-site farm visits, island retreats, and immersive brand encounters. Participation earns access, not just points.",
     },
     {
+      icon: "🏆",
       title: "Tier Progression",
-      desc: "Entry → Mid → VIP ecosystem recognition.",
+      desc: "Entry, Mid, and VIP tiers unlock deeper access and recognition. The more you believe, the more the ecosystem gives back.",
     },
   ];
 
-  const stickyLabel = heroInView ? "View Projects" : "Get Started";
-  const stickyHref = heroInView ? "#projects" : "#cta";
+  const stickyLabel = heroInView ? "Explore Projects" : "Request a demo";
+  const stickyHref = heroInView ? "#projects" : "mailto:hello@irwa.io";
 
   return (
     <div className="bg-white relative w-full min-h-screen text-[#0b0f19]">
@@ -255,32 +258,38 @@ export default function ResponsiveBackground() {
       </h1>
 
       <p className="text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
-        We measure, transact, and reward connection to culture, belief, faith, energy, sport, and community.
+        Turn emotional connection into a tradeable, rewarding asset — without the complexity of traditional finance.
       </p>
 
-      <div className="text-base md:text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45]">
-        Values • Ideology • Opinion • Faith • Belief
-      </div>
-
-      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <a
           href="#cta"
-          className="px-7 py-4 rounded-2xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white font-semibold shadow-[0_12px_30px_rgba(255,39,42,0.28)] hover:shadow-[0_14px_36px_rgba(255,79,139,0.34)] transition text-center sm:text-left"
+          className="px-7 py-4 rounded-2xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white font-semibold shadow-[0_12px_30px_rgba(255,39,42,0.28)] hover:shadow-[0_14px_36px_rgba(255,79,139,0.34)] transition text-center"
         >
           Build with us
         </a>
         <a
-          href="/evolution"
-          className="px-7 py-4 rounded-2xl border border-rose-200 bg-white/90 text-[#b42336] font-semibold hover:bg-rose-50 hover:border-rose-300 hover:text-[#8f1d2c] transition text-center sm:text-left"
+          href="#projects"
+          className="px-7 py-4 rounded-2xl border border-rose-200 bg-white/90 text-[#b42336] font-semibold hover:bg-rose-50 hover:border-rose-300 hover:text-[#8f1d2c] transition text-center"
         >
-          Our Evolution
+          Explore Projects
         </a>
-        <a
-          href="/instruments"
-          className="px-7 py-4 rounded-2xl border border-rose-200 bg-white/90 text-[#b42336] font-semibold hover:bg-rose-50 hover:border-rose-300 hover:text-[#8f1d2c] transition text-center sm:text-left"
-        >
-          Instruments
-        </a>
+      </div>
+
+      <div className="pt-2 space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+          What we tokenize
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {["Belief", "Culture", "Faith", "Community", "Sport", "Identity"].map((tag) => (
+            <span
+              key={tag}
+              className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-[#c81f34] border border-rose-100"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
 
@@ -309,10 +318,10 @@ export default function ResponsiveBackground() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { k: "3+", v: "Live pilot themes" },
-              { k: "Public", v: "Exchange-ready tokens" },
-              { k: "IRL", v: "Benefits & experiences" },
-              { k: "Global", v: "Cross-community support" },
+              { k: "3+", v: "Live token projects" },
+              { k: "16+", v: "Impact initiatives" },
+              { k: "IRL", v: "Real-world benefits" },
+              { k: "Open", v: "Public exchange tokens" },
             ].map((s) => (
               <div
                 key={s.v}
@@ -326,253 +335,6 @@ export default function ResponsiveBackground() {
         </div>
       </motion.section>
 
-      {/* Concept */}
-      <motion.section
-        id="concept"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={sectionVariants}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="scroll-mt-24 bg-[#f8fafc] relative px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
-      >
-        {/* ... your Concept section unchanged ... */}
-        {/* (kept exactly as your latest) */}
-        <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={fadeInUpVariants}
-            transition={{ duration: reduceMotion ? 0 : 0.6 }}
-            className="text-center space-y-4"
-          >
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Redefining Value
-            </h2>
-           <p className="text-black/70 text-base md:text-lg max-w-3xl mx-auto">
-  For 5,000 years, markets measured value in ownership.
-  We measure value in belief.
-
-  Financial assets capture capital.
-  iRWA captures conviction.
-</p>
- <div className="mt-10 text-center max-w-3xl mx-auto">
-  <p className="text-lg md:text-xl text-black/70">
-    Intangible assets already shape economies —
-    brands, movements, ideologies, communities.
-    We simply make them measurable and transactable.
-  </p>
-</div>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={scaleInVariants}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.05,
-            }}
-            className="bg-gradient-to-r from-[#eef2ff] to-[#fdf2f8] rounded-2xl p-6 md:p-10 border border-black/5 shadow-sm"
-          >
-            <p className="text-[#ff272a] text-base md:text-xl lg:text-2xl font-bold text-center leading-relaxed">
-              Total Value = Financial Assets (RWA) + Non-Financial Assets (iRWA)
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportCards}
-              variants={fadeInUpVariants}
-              transition={{ duration: reduceMotion ? 0 : 0.6 }}
-              whileHover={reduceMotion ? undefined : { y: -6 }}
-              className="bg-white rounded-2xl p-6 md:p-8 border border-black/5 shadow-sm space-y-6"
-            >
-              <h3 className="text-black/70 text-2xl md:text-3xl font-bold">
-                Tangible RWA
-              </h3>
-              <div className="space-y-4">
-                {[
-                  { icon: "📦", text: "Physical ownership" },
-                  { icon: "📈", text: "Financial returns focus" },
-                  { icon: "📋", text: "Heavily regulated / Taxable" },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={item.text}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={viewportCards}
-                    transition={{
-                      duration: reduceMotion ? 0 : 0.4,
-                      delay: reduceMotion ? 0 : 0.08 + idx * 0.06,
-                    }}
-                    className="flex items-center gap-4"
-                  >
-                    <span className="text-2xl">{item.icon}</span>
-                    <p className="text-base md:text-lg text-black/80">
-                      {item.text}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportCards}
-              variants={fadeInUpVariants}
-              transition={{
-                duration: reduceMotion ? 0 : 0.6,
-                delay: reduceMotion ? 0 : 0.02,
-              }}
-              whileHover={reduceMotion ? undefined : { y: -6 }}
-              className="bg-[#eef2ff] rounded-2xl p-6 md:p-8 border border-[#ff272a]/30 shadow-sm space-y-6"
-            >
-              <h3 className="text-[#ff272a] text-2xl md:text-3xl font-bold">
-                Intangible iRWA
-              </h3>
-              <div className="space-y-4">
-                {[
-                  { icon: "❤️", text: "Emotional connection" },
-                  { icon: "🎁", text: "Benefits are gifted" },
-                  { icon: "🌟", text: "Unregulated soft assets" },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={item.text}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={viewportCards}
-                    transition={{
-                      duration: reduceMotion ? 0 : 0.4,
-                      delay: reduceMotion ? 0 : 0.1 + idx * 0.06,
-                    }}
-                    className="flex items-center gap-4"
-                  >
-                    <span className="text-2xl">{item.icon}</span>
-                    <p className="text-[#ff272a] text-base md:text-lg">
-                      {item.text}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={scaleInVariants}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.1,
-            }}
-            className="text-center py-4"
-          >
-            <p className="text-2xl md:text-4xl font-bold bg-clip-text bg-gradient-to-r from-[#0f172a] to-[#64748b] text-transparent">
-              "You can't tax love."
-            </p>
-          </motion.div>
-        </div>
-
-        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-[#f8fafc] to-white" />
-
-      </motion.section>
-
-{/* iRWA Ecosystem – Animated */}
-<section
-  id="ecosystem"
-  className="relative bg-white px-6 lg:px-24 py-24 overflow-hidden"
->
-  <div className="max-w-6xl mx-auto text-center space-y-12">
-    <div className="space-y-4">
-      <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-        The iRWA Ecosystem
-      </h2>
-      <p className="text-slate-600 max-w-2xl mx-auto">
-        One account. One balance. Infinite allocation.
-      </p>
-    </div>
-
-    <div className="relative flex items-center justify-center h-[420px]">
-      {/* Center Token */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="absolute z-20 w-40 h-40 rounded-full bg-gradient-to-br from-[#ff272a] to-[#ff7a45] text-white flex items-center justify-center font-bold shadow-xl"
-      >
-        Ecosystem
-      </motion.div>
-
-      {/* User */}
-      <motion.div
-        initial={{ x: -80, opacity: 0 }}
-        whileInView={{ x: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="absolute left-0 text-center"
-      >
-        <div className="w-28 h-28 rounded-2xl bg-[#f8fafc] border border-black/5 flex items-center justify-center shadow-sm">
-          👤
-        </div>
-        <p className="mt-3 text-sm font-medium">User</p>
-      </motion.div>
-
-      {/* Projects */}
-      <motion.div
-        initial={{ x: 80, opacity: 0 }}
-        whileInView={{ x: 0, opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="absolute right-0 text-center"
-      >
-        <div className="w-28 h-28 rounded-2xl bg-[#f8fafc] border border-black/5 flex items-center justify-center shadow-sm">
-          🏝️
-        </div>
-        <p className="mt-3 text-sm font-medium">Projects</p>
-      </motion.div>
-
-      {/* Rewards */}
-      <motion.div
-        initial={{ y: 80, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="absolute bottom-0 text-center"
-      >
-        <div className="w-28 h-28 rounded-2xl bg-[#f8fafc] border border-black/5 flex items-center justify-center shadow-sm">
-          🎁
-        </div>
-        <p className="mt-3 text-sm font-medium">Rewards</p>
-      </motion.div>
-
-      {/* Animated Lines */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        transition={{ duration: 0.8 }}
-        className="absolute w-[70%] h-[2px] bg-gradient-to-r from-[#ff272a] to-[#ff7a45] origin-left"
-      />
-    </div>
-
-    {/* Minimal bullets */}
-    <div className="grid md:grid-cols-3 gap-6 pt-12 text-sm text-slate-600">
-      <div className="bg-[#f8fafc] p-6 rounded-2xl border border-black/5">
-        Top up & receive ecosystem tokens
-      </div>
-      <div className="bg-[#f8fafc] p-6 rounded-2xl border border-black/5">
-        Allocate across project tokens
-      </div>
-      <div className="bg-[#f8fafc] p-6 rounded-2xl border border-black/5">
-        Earn benefits & track impact
-      </div>
-    </div>
-  </div>
-</section>
       <motion.section
         id="projects"
         initial="hidden"
@@ -585,12 +347,15 @@ export default function ResponsiveBackground() {
         <div className="max-w-7xl mx-auto space-y-16">
 
           {/* Header */}
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-4">
+            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+              Live on Exchange
+            </span>
             <h2 className="text-4xl md:text-6xl font-semibold tracking-tight">
               Public Exchange Projects
             </h2>
             <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-              Each project operates with its own token — interoperable within the iRWA ecosystem.
+              Each project has its own token — participation, not speculation.
             </p>
           </div>
 
@@ -703,6 +468,183 @@ export default function ResponsiveBackground() {
         </div>
       </motion.section>
 
+      {/* Concept */}
+      <motion.section
+        id="concept"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={sectionVariants}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="scroll-mt-24 bg-[#f8fafc] relative px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
+      >
+        <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={fadeInUpVariants}
+            transition={{ duration: reduceMotion ? 0 : 0.6 }}
+            className="text-center space-y-4"
+          >
+            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+              The philosophy
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
+              Redefining Value
+            </h2>
+            <p className="text-black/70 text-base md:text-lg max-w-3xl mx-auto">
+              For 5,000 years, markets measured value in ownership.
+              We measure value in belief. Financial assets capture capital.
+              iRWA captures conviction.
+            </p>
+            <div className="mt-10 text-center max-w-3xl mx-auto">
+              <p className="text-lg md:text-xl text-black/70">
+                Intangible assets already shape economies —
+                brands, movements, ideologies, communities.
+                We simply make them measurable and transactable.
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={scaleInVariants}
+            transition={{
+              duration: reduceMotion ? 0 : 0.6,
+              delay: reduceMotion ? 0 : 0.05,
+            }}
+            className="bg-gradient-to-r from-[#eef2ff] to-[#fdf2f8] rounded-2xl p-6 md:p-10 border border-black/5 shadow-sm"
+          >
+            <p className="text-[#ff272a] text-base md:text-xl lg:text-2xl font-bold text-center leading-relaxed">
+              Total Value = Financial Assets (RWA) + Non-Financial Assets (iRWA)
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportCards}
+              variants={fadeInUpVariants}
+              transition={{ duration: reduceMotion ? 0 : 0.6 }}
+              whileHover={reduceMotion ? undefined : { y: -6 }}
+              className="bg-white rounded-2xl p-6 md:p-8 border border-black/5 shadow-sm space-y-6"
+            >
+              <h3 className="text-black/70 text-2xl md:text-3xl font-bold">
+                Tangible RWA
+              </h3>
+              <div className="space-y-4">
+                {[
+                  { icon: "📦", text: "Physical ownership" },
+                  { icon: "📈", text: "Financial returns focus" },
+                  { icon: "📋", text: "Heavily regulated / Taxable" },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={item.text}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={viewportCards}
+                    transition={{
+                      duration: reduceMotion ? 0 : 0.4,
+                      delay: reduceMotion ? 0 : 0.08 + idx * 0.06,
+                    }}
+                    className="flex items-center gap-4"
+                  >
+                    <span className="text-2xl">{item.icon}</span>
+                    <p className="text-base md:text-lg text-black/80">
+                      {item.text}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportCards}
+              variants={fadeInUpVariants}
+              transition={{
+                duration: reduceMotion ? 0 : 0.6,
+                delay: reduceMotion ? 0 : 0.02,
+              }}
+              whileHover={reduceMotion ? undefined : { y: -6 }}
+              className="bg-[#eef2ff] rounded-2xl p-6 md:p-8 border border-[#ff272a]/30 shadow-sm space-y-6"
+            >
+              <h3 className="text-[#ff272a] text-2xl md:text-3xl font-bold">
+                Intangible iRWA
+              </h3>
+              <div className="space-y-4">
+                {[
+                  { icon: "❤️", text: "Emotional connection" },
+                  { icon: "🎁", text: "Benefits are gifted" },
+                  { icon: "🌟", text: "Unregulated soft assets" },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={item.text}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={viewportCards}
+                    transition={{
+                      duration: reduceMotion ? 0 : 0.4,
+                      delay: reduceMotion ? 0 : 0.1 + idx * 0.06,
+                    }}
+                    className="flex items-center gap-4"
+                  >
+                    <span className="text-2xl">{item.icon}</span>
+                    <p className="text-[#ff272a] text-base md:text-lg">
+                      {item.text}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-[#f8fafc] to-white" />
+      </motion.section>
+
+      {/* Breakout quote */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: reduceMotion ? 0 : 0.9 }}
+        className="bg-[#0b0f19] px-6 lg:px-24 py-20 md:py-28 overflow-hidden relative"
+      >
+        <div className="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:56px_56px]" />
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-[#ff272a]/10 blur-3xl rounded-full" />
+        <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: reduceMotion ? 0 : 0.7 }}
+            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight tracking-tight"
+          >
+            "You can't{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45]">
+              tax love.
+            </span>
+            "
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.3 }}
+            className="text-white/50 text-lg md:text-xl max-w-xl mx-auto"
+          >
+            Intangible assets already shape the world. We make them measurable, transactable, and rewarding.
+          </motion.p>
+        </div>
+      </motion.section>
+
       {/* The System */}
       <motion.section
         id="system"
@@ -715,11 +657,14 @@ export default function ResponsiveBackground() {
       >
         <div className="max-w-6xl mx-auto space-y-14">
           <div className="text-center space-y-4">
+            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+              How it works
+            </span>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
               The System
             </h2>
             <p className="text-slate-600 max-w-2xl mx-auto">
-              A structured flow from connection to measurable impact.
+              Four steps from emotional connection to rewarded participation.
             </p>
           </div>
 
@@ -743,24 +688,24 @@ export default function ResponsiveBackground() {
 
             <div className="grid md:grid-cols-4 gap-6">
               {[
-                { step: "01", title: "Define Connection", desc: "Access, perks, meaning." },
-                { step: "02", title: "Mint Token", desc: "Connection rights issued." },
-                { step: "03", title: "Participate", desc: "Supporters align with mission." },
-                { step: "04", title: "Benefits Flow", desc: "Rewards & experiences activated." },
+                { step: "01", title: "Define Connection", desc: "Name what you stand for — your community, cause, or culture. That becomes your token's identity." },
+                { step: "02", title: "Mint Token", desc: "Connection rights are issued on-chain. Tradeable, verifiable, and interoperable across the ecosystem." },
+                { step: "03", title: "Participate", desc: "Supporters hold tokens to signal alignment. Their conviction is measured and rewarded — not just held." },
+                { step: "04", title: "Benefits Flow", desc: "Discounts, experiences, and access activate for token holders. The more you participate, the more you earn." },
               ].map((s, i) => (
                 <motion.div
                   key={s.step}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className="relative z-10 bg-white rounded-3xl border border-black/5 p-6 shadow-sm hover:shadow-md transition"
+                  transition={{ delay: i * 0.08 }}
+                  className="relative z-10 bg-white rounded-3xl border border-black/5 p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div className="text-xs font-semibold text-[#ff272a] mb-2">
+                  <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff272a] to-[#ff7a45] mb-4 leading-none">
                     {s.step}
                   </div>
-                  <h3 className="text-lg font-bold">{s.title}</h3>
-                  <p className="text-sm text-slate-600 mt-2">{s.desc}</p>
+                  <h3 className="text-lg font-bold mb-2">{s.title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -804,31 +749,48 @@ export default function ResponsiveBackground() {
             transition={{ duration: reduceMotion ? 0 : 0.6 }}
             className="text-center space-y-3"
           >
+            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+              Where iRWA fits
+            </span>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
               Built for real-world missions
             </h2>
             <p className="text-black/65 text-base md:text-lg max-w-2xl mx-auto">
-              iRWA fits projects where value comes from community, story, access,
-              and outcomes.
+              Any project where value comes from belief, community, or story — not just capital.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: "🌍", title: "ESG & Impact" },
-              { icon: "🎭", title: "Culture & Community" },
-              { icon: "🔗", title: "Ethical Supply Chains" },
+              {
+                icon: "🌍",
+                title: "ESG & Impact",
+                desc: "Reward communities for environmental and social outcomes. Turn purpose into participation.",
+              },
+              {
+                icon: "🎭",
+                title: "Culture & Community",
+                desc: "Tokenize fandom, loyalty, and belonging. Give communities real stakes in what they love.",
+              },
+              {
+                icon: "🔗",
+                title: "Ethical Supply Chains",
+                desc: "Connect consumers to provenance. Let belief in sourcing become a tradeable signal.",
+              },
             ].map((u, i) => (
               <motion.div
                 key={u.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm"
+                transition={{ delay: i * 0.08 }}
+                className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 space-y-4"
               >
-                <div className="text-3xl mb-4">{u.icon}</div>
+                <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-2xl">
+                  {u.icon}
+                </div>
                 <h3 className="text-xl font-bold">{u.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{u.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -847,11 +809,14 @@ export default function ResponsiveBackground() {
 >
   <div className="max-w-6xl mx-auto space-y-8">
     <div className="text-center space-y-3">
+      <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+        What you get
+      </span>
       <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
         Participation Engine
       </h2>
       <p className="text-slate-600 max-w-2xl mx-auto">
-        Rewards, impact experiences, and tier progression without broken scroll space.
+        Belief earns real benefits. Not just tokens — access, experiences, and status.
       </p>
     </div>
 
@@ -860,12 +825,15 @@ export default function ResponsiveBackground() {
         {cards.map((card) => (
           <div
             key={card.title}
-            className="min-w-[88%] md:min-w-[48%] lg:min-w-[32%] snap-center rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-8 md:p-10 shadow-sm"
+            className="min-w-[88%] md:min-w-[48%] lg:min-w-[32%] snap-center rounded-3xl border border-rose-100 bg-gradient-to-br from-white to-rose-50/40 p-8 md:p-10 shadow-sm space-y-4"
           >
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#ff272a] to-[#ff7a45] flex items-center justify-center text-2xl shadow-sm">
+              {card.icon}
+            </div>
             <h3 className="text-2xl md:text-3xl font-bold">
               {card.title}
             </h3>
-            <p className="text-slate-600 text-base md:text-lg mt-3">
+            <p className="text-slate-600 text-base md:text-lg leading-relaxed">
               {card.desc}
             </p>
           </div>
@@ -895,11 +863,14 @@ export default function ResponsiveBackground() {
             transition={{ duration: reduceMotion ? 0 : 0.6 }}
             className="text-center space-y-4"
           >
+            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+              Common questions
+            </span>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Frequently Asked Questions
+              Frequently Asked
             </h2>
             <p className="text-black/65 text-base md:text-lg">
-              Clear answers to common questions.
+              Clear answers on what iRWA is, how it works, and why it matters.
             </p>
           </motion.div>
 
@@ -937,49 +908,6 @@ export default function ResponsiveBackground() {
           </div>
         </div>
       </motion.section>
-{/* Unified Dashboard Concept */}
-<motion.section
-  id="dashboard"
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true, amount: 0.15 }}
-  variants={sectionVariants}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  className="scroll-mt-24 bg-white px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-24"
->
-  <div className="max-w-6xl mx-auto space-y-10">
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.25 }}
-      variants={fadeInUpVariants}
-      transition={{ duration: 0.6 }}
-      className="text-center space-y-3"
-    >
-      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">Your Unified Dashboard</h2>
-      <p className="text-[#949494] text-base md:text-lg max-w-3xl mx-auto">
-        A single place to view your total participation footprint, project allocations, tier status, and measurable impact indicators.
-      </p>
-    </motion.div>
-
-    <div className="bg-gradient-to-br from-slate-900 to-black text-white rounded-3xl p-8 shadow-2xl">
-      <div className="grid md:grid-cols-4 gap-6">
-        {[
-          { label: "Total Allocation", value: "$ 0.00" },
-          { label: "Active Projects", value: "3" },
-          { label: "Tier Status", value: "Entry" },
-          { label: "Impact Score", value: "—" },
-        ].map((stat) => (
-          <div key={stat.label} className="bg-white/5 rounded-2xl p-6">
-            <p className="text-xs text-white/50">{stat.label}</p>
-            <p className="text-2xl font-bold mt-2">{stat.value}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</motion.section>
-
       {/* CTA */}
       <motion.section
         id="cta"
@@ -1008,16 +936,16 @@ export default function ResponsiveBackground() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="#projects"
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 font-semibold text-black hover:opacity-90 transition"
-            >
-              See current projects
-            </a>
-            <a
-              href="#"
+              href="mailto:hello@irwa.io?subject=Demo request"
               className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-[#ff272a] px-7 py-4 font-semibold text-white shadow-lg hover:shadow-xl transition"
             >
               Request a demo
+            </a>
+            <a
+              href="/evolution"
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 font-semibold text-black hover:opacity-90 transition"
+            >
+              Read our story
             </a>
           </div>
 
