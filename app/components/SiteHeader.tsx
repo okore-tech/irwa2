@@ -96,7 +96,7 @@ export default function SiteHeader({ currentPath = "/" }: SiteHeaderProps) {
             <div className="flex items-center gap-2 md:gap-3">
               <a
                 href={projectsHref}
-                className="hidden sm:inline-flex min-h-11 items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-2 text-sm font-semibold hover:bg-black/[0.02] transition"
+                className="hidden sm:inline-flex min-h-11 items-center justify-center rounded-2xl border-2 border-[#1A3CFF] text-[#1A3CFF] px-4 py-2 text-sm font-semibold hover:bg-[#1A3CFF] hover:text-white transition"
               >
                 View projects
               </a>

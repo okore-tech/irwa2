@@ -69,7 +69,7 @@ const items = [
   },
 ];
 
-const VISIBLE_SIDE_CARDS = 2;
+const VISIBLE_SIDE_CARDS = 1;
 
 function getSignedDistance(index: number, activeIndex: number, total: number) {
   const wrapped = (index - activeIndex + total) % total;
@@ -107,7 +107,7 @@ export default function Hero3DCarousel({
 
           if (absDistance > VISIBLE_SIDE_CARDS) return null;
 
-          const translateX = distance * 46;
+          const translateX = distance * 32;
           const translateZ = 220 - absDistance * 95;
           const rotateY = -distance * 26;
           const scale = 1 - absDistance * 0.1;
@@ -132,7 +132,6 @@ export default function Hero3DCarousel({
                   WebkitBackfaceVisibility: "hidden",
                 }}
               >
-
                 <Image
                   src={item.img}
                   alt={item.title}
@@ -165,26 +164,11 @@ export default function Hero3DCarousel({
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           );
         })}
       </motion.div>
-
-      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-        {items.map((item, i) => (
-          <button
-            key={item.title}
-            type="button"
-            onClick={() => setActiveIndex(i)}
-            aria-label={`Show ${item.title}`}
-            className={`h-1.5 rounded-full transition-all ${
-              i === activeIndex ? "w-5 bg-slate-700" : "w-1.5 bg-slate-400/70"
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 }

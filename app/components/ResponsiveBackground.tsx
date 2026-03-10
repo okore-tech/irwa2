@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 import Hero3DCarousel from "./Hero3DCarousel";
 import SiteFooter from "./SiteFooter";
@@ -28,7 +28,6 @@ const sectionVariants = {
 const viewportOnce = { once: true, amount: 0.25 } as const;
 const viewportCards = { once: true, amount: 0.35 } as const;
 
-// Count-up animation component (only for numeric stats)
 function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
@@ -69,89 +68,50 @@ export default function ResponsiveBackground() {
   const heroRef = useRef<HTMLElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  // Mobile projects carousel state
-  const projectsScrollerRef = useRef<HTMLDivElement | null>(null);
-  const projectCardRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const [activeProject, setActiveProject] = useState(0);
-  const scrollEndTimer = useRef<number | null>(null);
-  const programmaticScroll = useRef(false);
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        setHeroInView(entry?.isIntersecting ?? true);
-      },
+      (entries) => setHeroInView(entries[0]?.isIntersecting ?? true),
       { root: null, threshold: 0.25 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
-  const scrollToProject = useCallback(
-    (idx: number) => {
-      const scroller = projectsScrollerRef.current;
-      const card = projectCardRefs.current[idx];
-      if (!scroller || !card) return;
-      programmaticScroll.current = true;
-      setActiveProject(idx);
-      const left =
-        card.offsetLeft - (scroller.clientWidth - card.clientWidth) / 2;
-      scroller.scrollTo({
-        left,
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
-      window.setTimeout(
-        () => {
-          programmaticScroll.current = false;
-        },
-        reduceMotion ? 0 : 380
-      );
-    },
-    [reduceMotion]
-  );
-
-  const updateActiveFromScroll = useCallback(() => {
-    const scroller = projectsScrollerRef.current;
-    if (!scroller) return;
-    const viewportCenter = scroller.scrollLeft + scroller.clientWidth / 2;
-    let bestIdx = 0;
-    let bestDist = Number.POSITIVE_INFINITY;
-    projectCardRefs.current.forEach((card, idx) => {
-      if (!card) return;
-      const cardCenter = card.offsetLeft + card.clientWidth / 2;
-      const dist = Math.abs(cardCenter - viewportCenter);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIdx = idx;
-      }
-    });
-    setActiveProject(bestIdx);
-  }, []);
-
-  const onProjectsScroll = useCallback(() => {
-    if (programmaticScroll.current) return;
-    updateActiveFromScroll();
-    if (scrollEndTimer.current) window.clearTimeout(scrollEndTimer.current);
-    scrollEndTimer.current = window.setTimeout(() => {
-      updateActiveFromScroll();
-      scrollToProject(activeProject);
-    }, 110);
-  }, [activeProject, scrollToProject, updateActiveFromScroll]);
+  const CYCLING_WORDS = ["love", "belief", "culture", "passion", "belonging", "identity"];
+  const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
-    const onResize = () => {
-      updateActiveFromScroll();
-      scrollToProject(activeProject);
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [activeProject, scrollToProject, updateActiveFromScroll]);
+    const t = setInterval(
+      () => setWordIndex((i) => (i + 1) % CYCLING_WORDS.length),
+      3000
+    );
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Per-economy accent colours for project cards
+  const handleEmailSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!email) return;
+      try {
+        await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+      } catch {
+        // fail silently — still show confirmation to user
+      }
+      setEmailSent(true);
+    },
+    [email]
+  );
+
   const PROJECTS = [
     {
       tag: "ESG",
@@ -161,7 +121,14 @@ export default function ResponsiveBackground() {
       title: "Bean You",
       desc: "Connecting coffee drinkers to Kenyan farmers. 15,000 acres of emotional connection.",
       impact: "Health, education, tech centres",
+      holders: "847",
       href: "https://beanyou.com",
+      benefits: [
+        "Farm visit experience in Kenya",
+        "Coffee subscription discounts",
+        "Direct farmer impact updates",
+        "Tier-based brand partner perks",
+      ],
     },
     {
       tag: "Peace",
@@ -171,7 +138,14 @@ export default function ResponsiveBackground() {
       title: "Zut Island",
       desc: "Olive trees on a Croatian island. Meditation and wellbeing through nature.",
       impact: "Meditation & wellbeing centres",
+      holders: "212",
       href: "https://zut.digital",
+      benefits: [
+        "Island meditation retreat access",
+        "Wellbeing centre membership",
+        "Olive oil harvest participation",
+        "Tier-based island experiences",
+      ],
     },
     {
       tag: "Coming soon",
@@ -181,11 +155,18 @@ export default function ResponsiveBackground() {
       title: "EV Minerals",
       desc: "Connecting EV drivers to ethical mineral sourcing across 770,400 km².",
       impact: "Child education & health centres",
+      holders: null,
       href: "",
+      benefits: [
+        "Ethical sourcing certificates",
+        "EV partner charging discounts",
+        "Community governance voting",
+        "Education centre access",
+      ],
     },
   ];
 
-  const cards = [
+  const rewards = [
     {
       icon: "⚡",
       title: "Instant Rewards",
@@ -193,33 +174,45 @@ export default function ResponsiveBackground() {
     },
     {
       icon: "🌍",
-      title: "Impact Experiences",
+      title: "Real Experiences",
       desc: "On-site farm visits, island retreats, and immersive brand encounters. Participation earns access, not just points.",
     },
     {
       icon: "🏆",
-      title: "Tier Progression",
-      desc: "Entry, Mid, and VIP tiers unlock deeper access and recognition. The more you believe, the more the ecosystem gives back.",
+      title: "Tier Recognition",
+      desc: "Entry, Mid, and VIP tiers unlock deeper access and status. The more you believe, the more the ecosystem gives back.",
     },
   ];
 
   const faqs = [
     {
-      q: "What is an iRWA?",
-      a: "iRWA stands for Intangible Real World Assets. These are tokenized emotional connections and soft benefits that don't involve physical ownership.",
+      q: "What is an iRWA token?",
+      a: "An iRWA token represents your emotional connection to a project — a coffee farm, an island, a cause. It's not equity or debt. It's a tokenized belief that earns you real benefits.",
+    },
+    {
+      q: "How is this different from a loyalty programme?",
+      a: "Loyalty points expire, stay locked in one brand, and can't be traded. iRWA tokens are on-chain, transferable, and work across multiple projects in the ecosystem.",
     },
     {
       q: "How is iRWA different from traditional RWA?",
-      a: "Unlike traditional RWAs which represent physical ownership and financial returns, iRWAs tokenize emotional value, access rights, and intangible benefits.",
+      a: "Traditional RWAs represent physical ownership and financial returns — property, bonds, commodities. iRWAs tokenize emotional value and access rights. No ownership, no speculation, just rewarded participation.",
     },
     {
       q: "Is iRWA regulated?",
-      a: "iRWAs represent soft assets and emotional connections, making them generally unregulated compared to traditional financial instruments.",
+      a: "iRWA tokens represent soft assets and emotional connections — not financial instruments. This makes them generally outside the scope of traditional financial regulation.",
+    },
+    {
+      q: "How do I participate in a project?",
+      a: "Connect a wallet, choose a project you believe in, and hold its token. Benefits activate automatically based on your tier. No trading required.",
+    },
+    {
+      q: "Can I build my own iRWA project?",
+      a: "Yes. If you have a community, cause, or brand with genuine belief behind it, we can help you define and mint your token. Reach out via the demo request below.",
     },
   ];
 
   const stickyLabel = heroInView ? "Explore Projects" : "Request a demo";
-  const stickyHref = heroInView ? "#projects" : "mailto:hello@irwa.io";
+  const stickyHref = heroInView ? "#projects" : "#cta";
 
   return (
     <div className="bg-white relative w-full min-h-screen text-[#0b0f19]">
@@ -233,121 +226,143 @@ export default function ResponsiveBackground() {
         <div className="mx-auto max-w-md">
           <a
             href={stickyHref}
-            className="group flex items-center justify-between rounded-2xl bg-[#0b0f19] text-white px-5 py-4 shadow-xl shadow-black/15 ring-1 ring-white/10"
+            className="group flex items-center justify-between rounded-2xl bg-white border border-gray-200 shadow-lg px-5 py-4"
           >
-            <span className="font-semibold">{stickyLabel}</span>
-            <span className="text-white/70 group-hover:text-white transition">
-              →
-            </span>
+            <span className="font-semibold text-gray-900">{stickyLabel}</span>
+            <span className="text-gray-400 group-hover:text-gray-700 transition">→</span>
           </a>
         </div>
       </div>
 
-      {/* ─── HERO — dark atmospheric ─────────────────────────────────────── */}
-      <motion.section
+      {/* ─── HERO ────────────────────────────────────────────────────────── */}
+      <section
         id="hero"
         ref={heroRef}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={sectionVariants}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative min-h-screen flex items-center overflow-hidden bg-[#0b0f19] text-white"
+        className="relative flex flex-col overflow-hidden bg-[#fafafa]"
+        style={{ minHeight: "calc(100vh - 64px)" }}
       >
-        {/* Atmospheric blobs */}
-        <div className="absolute -top-44 -left-40 w-[520px] h-[520px] bg-[#ff272a]/12 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute top-16 right-[-90px] w-[420px] h-[420px] bg-indigo-900/50 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute bottom-[-140px] left-1/3 w-[480px] h-[480px] bg-rose-900/20 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute bottom-[-180px] right-[-120px] w-[460px] h-[460px] bg-amber-900/15 blur-3xl rounded-full pointer-events-none" />
+        {/* Soft warm orb — top left */}
+        <div className="absolute pointer-events-none"
+          style={{ top: -60, left: -80, width: 480, height: 380,
+            background: "radial-gradient(circle, #FF6030 0%, transparent 68%)",
+            opacity: 0.11, filter: "blur(80px)" }} />
+        {/* Soft cool orb — right */}
+        <div className="absolute pointer-events-none"
+          style={{ top: -20, right: -80, width: 520, height: 440,
+            background: "radial-gradient(circle, #3B5BFF 0%, transparent 68%)",
+            opacity: 0.09, filter: "blur(100px)" }} />
 
-        {/* Subtle grid texture */}
-        <div className="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+        {/* ── Two-column grid ── */}
+        <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-2 max-w-7xl mx-auto w-full">
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-24 py-20 md:py-24 lg:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-          {/* LEFT SIDE */}
-          <div className="relative z-20 space-y-6 sm:space-y-8 lg:order-1">
-
-            {/* Opening provocation */}
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-white/45 text-base md:text-lg max-w-lg leading-relaxed"
+          {/* LEFT — text, below carousel on mobile */}
+          <motion.div
+            initial="hidden"
+            animate="show"
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.11 } } }}
+            className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-6 sm:px-10 lg:px-16 pt-4 pb-12 lg:py-0 order-2 lg:order-1"
+          >
+            {/* Badge */}
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-rose-200 bg-white text-rose-500 text-[11px] font-semibold tracking-widest uppercase mb-6 shadow-sm"
             >
-              Your favourite coffee. Your sacred mountain. Your football club.
-              <br />
-              <span className="text-white/80 font-semibold">
-                What if your belief in them was worth something?
-              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+              iRWA · Intangible Real World Assets
+            </motion.div>
+
+            {/* Cycling word */}
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
+              className="overflow-hidden mb-3"
+              style={{ height: "clamp(68px, 17vw, 108px)" }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={CYCLING_WORDS[wordIndex]}
+                  className="block font-black tracking-tighter select-none"
+                  style={{
+                    fontSize: "clamp(68px, 17vw, 108px)",
+                    lineHeight: 1,
+                    background: "linear-gradient(90deg, #FF6035 0%, #F43F5E 38%, #8B5CF6 72%, #2563EB 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                  initial={{ y: "110%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  exit={{ y: "-110%", opacity: 0 }}
+                  transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {CYCLING_WORDS[wordIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Supporting line */}
+            <motion.p
+              variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
+              className="text-gray-400 text-lg leading-snug mb-8 max-w-[300px] lg:max-w-xs"
+            >
+              has value. We put it on&#8209;chain.
             </motion.p>
 
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/8 border border-white/10 text-white/70 backdrop-blur-md shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#ff272a] to-[#ff7a45] animate-pulse" />
-              <span className="text-xs tracking-[0.14em] uppercase font-semibold">
-                Intangible Real World Assets
-              </span>
+            {/* CTA */}
+            <motion.a
+              variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
+              href="#cta"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold text-white hover:opacity-90 hover:scale-[1.02] transition-all active:scale-[0.98]"
+              style={{
+                background: "linear-gradient(90deg, #FF6035 0%, #F43F5E 50%, #8B5CF6 100%)",
+                boxShadow: "0 6px 20px rgba(244,63,94,0.28)",
+              }}
+            >
+              Get Started →
+            </motion.a>
+          </motion.div>
+
+          {/* RIGHT — carousel, top on mobile, clipped to column */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden flex items-center justify-center px-6 sm:px-10 lg:px-8 pt-16 sm:pt-12 lg:pt-0 pb-10 lg:pb-0 order-1 lg:order-2"
+          >
+            <div className="w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[420px]">
+              <Hero3DCarousel />
             </div>
-
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-[1.05] tracking-tight text-white">
-              Tokenize the{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45]">
-                connection
-              </span>
-              , not the assets.
-            </h1>
-
-            <p className="text-lg md:text-xl text-white/55 max-w-xl leading-relaxed">
-              Turn emotional connection into a tradeable, rewarding asset —
-              without the complexity of traditional finance.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a
-                href="#cta"
-                className="px-7 py-4 rounded-2xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white font-semibold shadow-[0_12px_30px_rgba(255,39,42,0.35)] hover:shadow-[0_14px_36px_rgba(255,79,139,0.45)] transition text-center"
-              >
-                Build with us
-              </a>
-              <a
-                href="#projects"
-                className="px-7 py-4 rounded-2xl border border-white/20 bg-white/5 text-white font-semibold hover:bg-white/10 hover:border-white/30 transition text-center backdrop-blur-sm"
-              >
-                Explore Projects
-              </a>
-            </div>
-
-            <div className="pt-2 space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-white/30">
-                What we tokenize
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["Belief", "Culture", "Faith", "Community", "Sport", "Identity"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 rounded-full text-xs font-semibold bg-white/8 text-white/60 border border-white/10"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT SIDE — carousel on dark */}
-          <div className="relative z-10 flex justify-center lg:justify-end w-full lg:order-2">
-            <div className="relative w-full max-w-[560px] overflow-hidden rounded-[36px] p-5 sm:p-7 bg-white/5 backdrop-blur-xl border border-white/10 ring-1 ring-[#ff272a]/20 shadow-[0_30px_80px_rgba(255,39,42,0.2)]">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#ff272a]/8 via-transparent to-indigo-900/20 pointer-events-none" />
-              <div className="relative">
-                <Hero3DCarousel />
-              </div>
-            </div>
-          </div>
+          </motion.div>
 
         </div>
-      </motion.section>
 
-      {/* ─── BREAKOUT QUOTE — position 2, maximum early impact ──────────── */}
+        {/* ── Tagline divider ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.65 }}
+          className="relative z-10 border-t border-gray-100 bg-white px-6 sm:px-10 lg:px-16 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-7xl mx-auto w-full"
+        >
+          <p className="text-base sm:text-lg font-semibold text-gray-900 text-center sm:text-left">
+            Tokenize the{" "}
+            <span style={{
+              background: "linear-gradient(90deg, #FF6035 0%, #F43F5E 45%, #8B5CF6 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>connection</span>
+            {" "}— not the asset.
+          </p>
+          <a
+            href="#cta"
+            className="shrink-0 px-6 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition active:scale-[0.98]"
+            style={{ background: "linear-gradient(90deg, #FF6035 0%, #F43F5E 50%, #8B5CF6 100%)" }}
+          >
+            Build with us
+          </a>
+        </motion.div>
+      </section>
+
+      {/* ─── BREAKOUT QUOTE ──────────────────────────────────────────────── */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -370,10 +385,7 @@ export default function ResponsiveBackground() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.3,
-            }}
+            transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.3 }}
             className="text-white/75 text-lg md:text-xl max-w-xl mx-auto"
           >
             Intangible assets already shape the world. We make them measurable,
@@ -382,74 +394,46 @@ export default function ResponsiveBackground() {
         </div>
       </motion.section>
 
-      {/* ─── STATS — count-up numbers + named project pills ─────────────── */}
+      {/* ─── LIVE PROJECTS STRIP ─────────────────────────────────────────── */}
       <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
         variants={sectionVariants}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-[#f8fafc] px-4 md:px-8 lg:px-24 py-10 md:py-14"
+        className="bg-[#f8fafc] px-4 md:px-8 lg:px-24 py-8 md:py-10 border-b border-black/5"
       >
-        <div className="max-w-6xl mx-auto space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+            Live on exchange
+          </span>
+          <div className="flex flex-wrap gap-3">
             {[
-              { numeric: 3, suffix: "+", label: "Live token projects" },
-              { numeric: 16, suffix: "+", label: "Impact initiatives" },
-              { numeric: null, text: "IRL", label: "Real-world benefits" },
-              { numeric: null, text: "Open", label: "Public exchange tokens" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="rounded-2xl border border-black/5 bg-white p-4 md:p-5 shadow-sm"
-              >
-                <div className="text-2xl md:text-3xl font-bold">
-                  {s.numeric !== null ? (
-                    <CountUp to={s.numeric} suffix={s.suffix ?? ""} />
-                  ) : (
-                    s.text
-                  )}
-                </div>
-                <div className="text-sm text-black/60 mt-1">{s.label}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Named project pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400 mr-1">
-              Live now:
-            </span>
-            {[
-              {
-                name: "BeanYou",
-                href: "https://beanyou.com",
-                cls: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
-              },
-              {
-                name: "Zut Island",
-                href: "https://zut.digital",
-                cls: "bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-100",
-              },
-              {
-                name: "EV Minerals",
-                href: "#projects",
-                cls: "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100",
-              },
+              { name: "BeanYou", holders: "847", tag: "ESG", href: "https://beanyou.com", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+              { name: "Zut Island", holders: "212", tag: "Peace", href: "https://zut.digital", cls: "bg-sky-50 text-sky-700 border-sky-200" },
+              { name: "EV Minerals", holders: null, tag: "Coming Q3", href: "#projects", cls: "bg-slate-50 text-slate-500 border-slate-200" },
             ].map((p) => (
               <a
                 key={p.name}
                 href={p.href}
                 target={p.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  p.href.startsWith("http") ? "noreferrer" : undefined
-                }
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition ${p.cls}`}
+                rel={p.href.startsWith("http") ? "noreferrer" : undefined}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition hover:opacity-80 ${p.cls}`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
                 {p.name}
+                {p.holders && (
+                  <span className="opacity-60 font-normal">
+                    · <CountUp to={parseInt(p.holders)} /> holders
+                  </span>
+                )}
+                {!p.holders && <span className="opacity-50 font-normal text-xs">{p.tag}</span>}
               </a>
             ))}
+          </div>
+          <div className="hidden md:flex items-center gap-6 text-sm text-slate-500">
+            <span><span className="font-bold text-[#0b0f19]">16+</span> impact initiatives</span>
+            <span><span className="font-bold text-[#0b0f19]">IRL</span> real-world benefits</span>
           </div>
         </div>
       </motion.section>
@@ -465,25 +449,18 @@ export default function ResponsiveBackground() {
         className="scroll-mt-24 bg-gradient-to-br from-rose-50 via-white to-orange-50 px-6 lg:px-24 py-20"
       >
         <div className="max-w-7xl mx-auto space-y-16">
-
-          {/* Header */}
           <div className="text-center space-y-3">
             <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
-              Live on Exchange
+              Our Projects
             </span>
             <h2 className="text-4xl md:text-6xl font-semibold tracking-tight">
-              Public Exchange Projects
+              Projects people believe in
             </h2>
             <p className="text-slate-500 text-base max-w-xl mx-auto italic">
-              Each of these started as a belief. Now it's an exchange-traded
-              token.
-            </p>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-              Each project has its own token — participation, not speculation.
+              Each of these started as a belief. Now it's an exchange-traded token.
             </p>
           </div>
 
-          {/* Grid */}
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-10">
             {PROJECTS.map((p) => (
               <div
@@ -491,15 +468,15 @@ export default function ResponsiveBackground() {
                 className="group rounded-[32px] bg-white/70 backdrop-blur-xl border border-slate-200 shadow-xl hover:shadow-2xl transition overflow-hidden"
                 style={{ borderTopWidth: "4px", borderTopColor: p.topColor }}
               >
-                {/* Image */}
                 <div className="relative h-56 overflow-hidden">
-                  <span
-                    className={`absolute top-5 left-5 z-10 px-4 py-2 text-xs font-semibold rounded-full bg-gradient-to-r ${p.badgeGradient} text-white shadow`}
-                  >
-                    {p.tag === "Coming soon"
-                      ? "Coming Soon"
-                      : "Public Exchange Token"}
+                  <span className={`absolute top-5 left-5 z-10 px-4 py-2 text-xs font-semibold rounded-full bg-gradient-to-r ${p.badgeGradient} text-white shadow`}>
+                    {p.tag === "Coming soon" ? "Coming Soon" : "Public Exchange Token"}
                   </span>
+                  {p.holders && (
+                    <span className="absolute top-5 right-5 z-10 px-3 py-1.5 text-xs font-semibold rounded-full bg-black/40 text-white backdrop-blur-sm">
+                      <CountUp to={parseInt(p.holders)} /> holders
+                    </span>
+                  )}
                   <Image
                     src={p.img}
                     alt={p.title}
@@ -508,21 +485,12 @@ export default function ResponsiveBackground() {
                   />
                 </div>
 
-                {/* Content */}
                 <div className="p-8 space-y-6">
                   <h3 className="text-2xl font-semibold">{p.title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    {p.desc}
-                  </p>
+                  <p className="text-sm text-slate-500 leading-relaxed">{p.desc}</p>
 
-                  {/* Benefits */}
                   <div className="space-y-3 text-sm text-slate-600">
-                    {[
-                      "Brand discounts",
-                      "Partner experiences",
-                      "Prize draws",
-                      "Tier-based access",
-                    ].map((b) => (
+                    {p.benefits.map((b) => (
                       <div key={b} className="flex gap-2 items-start">
                         <span className="w-2 h-2 mt-2 bg-[#ff4f8b] rounded-full flex-shrink-0" />
                         <span>{b}</span>
@@ -530,37 +498,23 @@ export default function ResponsiveBackground() {
                     ))}
                   </div>
 
-                  {/* Impact signal */}
                   <div className="pt-4 border-t border-slate-200 text-sm text-slate-500">
                     Impact focus:{" "}
-                    <span className="font-medium text-[#c81f34]">
-                      {p.impact}
-                    </span>
+                    <span className="font-medium text-[#c81f34]">{p.impact}</span>
                   </div>
 
-                  {/* CTA */}
                   <div className="pt-4 flex items-center justify-between">
                     {p.href ? (
                       <>
-                        <a
-                          href={p.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-sm text-slate-500 hover:text-slate-900 underline underline-offset-4"
-                        >
+                        <a href={p.href} target="_blank" rel="noreferrer" className="text-sm text-slate-500 hover:text-slate-900 underline underline-offset-4">
                           Visit project →
                         </a>
-                        <a
-                          href="#cta"
-                          className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white text-sm font-semibold shadow-[0_8px_18px_rgba(255,39,42,0.24)] hover:shadow-[0_10px_24px_rgba(255,79,139,0.32)] transition"
-                        >
-                          Participate
+                        <a href="#cta" className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#ff272a] via-[#ff4f8b] to-[#ff7a45] text-white text-sm font-semibold shadow-[0_8px_18px_rgba(255,39,42,0.24)] hover:shadow-[0_10px_24px_rgba(255,79,139,0.32)] transition">
+                          Get involved
                         </a>
                       </>
                     ) : (
-                      <span className="text-sm text-slate-400 italic">
-                        Coming soon
-                      </span>
+                      <span className="text-sm text-slate-400 italic">Coming soon</span>
                     )}
                   </div>
                 </div>
@@ -570,7 +524,108 @@ export default function ResponsiveBackground() {
         </div>
       </motion.section>
 
-      {/* ─── CONCEPT ─────────────────────────────────────────────────────── */}
+      {/* ─── WHAT BELIEF EARNS YOU (was Participation Engine) ───────────── */}
+      <motion.section
+        id="participation"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={sectionVariants}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="scroll-mt-24 bg-white px-4 md:px-8 lg:px-24 py-16 md:py-20 lg:py-24"
+      >
+        <div className="max-w-6xl mx-auto space-y-8">
+          <div className="text-center space-y-3">
+            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
+              What you get
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
+              What belief earns you
+            </h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
+              Hold a token. Earn real access, real rewards, and real recognition — not just points.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {rewards.map((card, i) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="rounded-3xl border border-rose-100 bg-gradient-to-br from-white to-rose-50/40 p-8 shadow-sm space-y-4"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#ff272a] to-[#ff7a45] flex items-center justify-center text-2xl shadow-sm">
+                  {card.icon}
+                </div>
+                <h3 className="text-2xl font-bold">{card.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{card.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* ─── TESTIMONIAL ─────────────────────────────────────────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={sectionVariants}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="bg-[#f8fafc] px-6 lg:px-24 py-16 md:py-20"
+      >
+        <div className="max-w-4xl mx-auto space-y-12">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a] text-center">
+            From the community
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                quote: "Holding BeanYou tokens changed how I think about my morning coffee. I know exactly where it came from — and I earned my way to an on-site visit in Kenya.",
+                name: "Sarah M.",
+                role: "BeanYou token holder",
+                color: "linear-gradient(135deg, #6ee7b7, #059669)",
+              },
+              {
+                quote: "I thought blockchain was just for speculation. iRWA showed me it can mean something real — my Zut Island token gets me access to a meditation retreat I genuinely care about.",
+                name: "James T.",
+                role: "Zut Island token holder",
+                color: "linear-gradient(135deg, #7dd3fc, #2563eb)",
+              },
+            ].map((t) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6"
+              >
+                <p className="text-slate-700 text-lg leading-relaxed">
+                  "{t.quote}"
+                </p>
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-white text-sm font-bold"
+                    style={{ background: t.color }}
+                  >
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{t.name}</p>
+                    <p className="text-xs text-slate-400">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* ─── CONCEPT — human rewrite, no formula ─────────────────────────── */}
       <motion.section
         id="concept"
         initial="hidden"
@@ -578,88 +633,59 @@ export default function ResponsiveBackground() {
         viewport={{ once: true, amount: 0.15 }}
         variants={sectionVariants}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="scroll-mt-24 bg-[#f8fafc] relative px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
+        className="scroll-mt-24 bg-white px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
       >
-        <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
+        <div className="max-w-6xl mx-auto space-y-12">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={viewportOnce}
             variants={fadeInUpVariants}
             transition={{ duration: reduceMotion ? 0 : 0.6 }}
-            className="text-center space-y-4"
+            className="text-center space-y-4 max-w-3xl mx-auto"
           >
             <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
               The philosophy
             </span>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Redefining Value
+              Markets forgot something
             </h2>
-            <p className="text-black/70 text-base md:text-lg max-w-3xl mx-auto">
-              For 5,000 years, markets measured value in ownership. We measure
-              value in belief. Financial assets capture capital. iRWA captures
-              conviction.
+            <p className="text-slate-500 text-lg leading-relaxed">
+              For thousands of years, people have built movements around belief — religions, football clubs, cultural icons. Markets never found a way to reward the people who believed first. iRWA does.
             </p>
-            <div className="mt-10 text-center max-w-3xl mx-auto">
-              <p className="text-lg md:text-xl text-black/70">
-                Intangible assets already shape economies — brands, movements,
-                ideologies, communities. We simply make them measurable and
-                transactable.
-              </p>
+          </motion.div>
+
+          {/* Old way / New way — human contrast */}
+          <div className="relative grid md:grid-cols-2 gap-6">
+            {/* VS connector — desktop only */}
+            <div className="hidden md:flex absolute inset-y-0 left-1/2 -translate-x-1/2 items-center justify-center z-10 pointer-events-none">
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-px h-12 bg-gradient-to-b from-transparent to-slate-300" />
+                <span className="w-9 h-9 rounded-full bg-white border-2 border-slate-200 flex items-center justify-center text-xs font-black text-slate-400 shadow-sm">
+                  VS
+                </span>
+                <div className="w-px h-12 bg-gradient-to-b from-slate-300 to-transparent" />
+              </div>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={scaleInVariants}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.05,
-            }}
-            className="bg-gradient-to-r from-[#eef2ff] to-[#fdf2f8] rounded-2xl p-6 md:p-10 border border-black/5 shadow-sm"
-          >
-            <p className="text-[#ff272a] text-base md:text-xl lg:text-2xl font-bold text-center leading-relaxed">
-              Total Value = Financial Assets (RWA) + Non-Financial Assets (iRWA)
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={viewportCards}
               variants={fadeInUpVariants}
               transition={{ duration: reduceMotion ? 0 : 0.6 }}
-              whileHover={reduceMotion ? undefined : { y: -6 }}
-              className="bg-white rounded-2xl p-6 md:p-8 border border-black/5 shadow-sm space-y-6"
+              className="bg-slate-50 rounded-3xl p-8 border border-slate-200 space-y-5"
             >
-              <h3 className="text-black/70 text-2xl md:text-3xl font-bold">
-                Tangible RWA
-              </h3>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">The old way</p>
               <div className="space-y-4">
                 {[
-                  { icon: "📦", text: "Physical ownership" },
-                  { icon: "📈", text: "Financial returns focus" },
-                  { icon: "📋", text: "Heavily regulated / Taxable" },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={item.text}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={viewportCards}
-                    transition={{
-                      duration: reduceMotion ? 0 : 0.4,
-                      delay: reduceMotion ? 0 : 0.08 + idx * 0.06,
-                    }}
-                    className="flex items-center gap-4"
-                  >
-                    <span className="text-2xl">{item.icon}</span>
-                    <p className="text-base md:text-lg text-black/80">
-                      {item.text}
-                    </p>
-                  </motion.div>
+                  { icon: "📦", text: "You love a brand. You buy their products. You get nothing back." },
+                  { icon: "💸", text: "Value flows to shareholders and executives, not believers." },
+                  { icon: "🔒", text: "Your loyalty is invisible — unmeasured, unrecognised, unrewarded." },
+                ].map((item) => (
+                  <div key={item.text} className="flex gap-3 items-start">
+                    <span className="text-xl mt-0.5">{item.icon}</span>
+                    <p className="text-slate-600 leading-relaxed">{item.text}</p>
+                  </div>
                 ))}
               </div>
             </motion.div>
@@ -669,45 +695,25 @@ export default function ResponsiveBackground() {
               whileInView="visible"
               viewport={viewportCards}
               variants={fadeInUpVariants}
-              transition={{
-                duration: reduceMotion ? 0 : 0.6,
-                delay: reduceMotion ? 0 : 0.02,
-              }}
-              whileHover={reduceMotion ? undefined : { y: -6 }}
-              className="bg-[#eef2ff] rounded-2xl p-6 md:p-8 border border-[#ff272a]/30 shadow-sm space-y-6"
+              transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.1 }}
+              className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-3xl p-8 border border-rose-200 space-y-5"
             >
-              <h3 className="text-[#ff272a] text-2xl md:text-3xl font-bold">
-                Intangible iRWA
-              </h3>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#ff272a]">The iRWA way</p>
               <div className="space-y-4">
                 {[
-                  { icon: "❤️", text: "Emotional connection" },
-                  { icon: "🎁", text: "Benefits are gifted" },
-                  { icon: "🌟", text: "Unregulated soft assets" },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={item.text}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={viewportCards}
-                    transition={{
-                      duration: reduceMotion ? 0 : 0.4,
-                      delay: reduceMotion ? 0 : 0.1 + idx * 0.06,
-                    }}
-                    className="flex items-center gap-4"
-                  >
-                    <span className="text-2xl">{item.icon}</span>
-                    <p className="text-[#ff272a] text-base md:text-lg">
-                      {item.text}
-                    </p>
-                  </motion.div>
+                  { icon: "❤️", text: "You love a project. You hold a token. Your belief earns you real benefits." },
+                  { icon: "🎁", text: "Rewards flow to participants — discounts, experiences, and access." },
+                  { icon: "🌟", text: "Your conviction is on-chain, transferable, and permanently yours." },
+                ].map((item) => (
+                  <div key={item.text} className="flex gap-3 items-start">
+                    <span className="text-xl mt-0.5">{item.icon}</span>
+                    <p className="text-slate-700 leading-relaxed font-medium">{item.text}</p>
+                  </div>
                 ))}
               </div>
             </motion.div>
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-[#f8fafc] to-white pointer-events-none" />
       </motion.section>
 
       {/* ─── THE SYSTEM ──────────────────────────────────────────────────── */}
@@ -726,45 +732,15 @@ export default function ResponsiveBackground() {
               How it works
             </span>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-              The System
+              From belief to benefit
             </h2>
             <p className="text-slate-600 max-w-2xl mx-auto">
               Four steps from emotional connection to rewarded participation.
             </p>
           </div>
 
-          {/* Before / After contrast */}
-          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            <div className="rounded-2xl bg-slate-100 border border-slate-200 p-6 space-y-2">
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                Before iRWA
-              </p>
-              <p className="text-slate-600 text-base leading-relaxed">
-                You love what a brand stands for. You buy their products.{" "}
-                <strong className="text-slate-800">You get nothing back.</strong>
-              </p>
-            </div>
-            <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-200 p-6 space-y-2">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#ff272a]">
-                With iRWA
-              </p>
-              <p className="text-slate-600 text-base leading-relaxed">
-                You hold an iRWA token. You earn access, rewards, and
-                recognition.{" "}
-                <strong className="text-[#c81f34]">
-                  Your conviction pays off.
-                </strong>
-              </p>
-            </div>
-          </div>
-
           <div className="relative">
-            {/* Animated connector line */}
-            <svg
-              className="hidden md:block absolute top-1/2 left-0 w-full h-2 -translate-y-1/2"
-              viewBox="0 0 1000 10"
-              fill="none"
-            >
+            <svg className="hidden md:block absolute top-1/2 left-0 w-full h-2 -translate-y-1/2" viewBox="0 0 1000 10" fill="none">
               <motion.path
                 d="M50 5 H950"
                 stroke="#ff4f8b"
@@ -779,26 +755,10 @@ export default function ResponsiveBackground() {
 
             <div className="grid md:grid-cols-4 gap-6">
               {[
-                {
-                  step: "01",
-                  title: "Define Connection",
-                  desc: "Name what you stand for — your community, cause, or culture. That becomes your token's identity.",
-                },
-                {
-                  step: "02",
-                  title: "Mint Token",
-                  desc: "Connection rights are issued on-chain. Tradeable, verifiable, and interoperable across the ecosystem.",
-                },
-                {
-                  step: "03",
-                  title: "Participate",
-                  desc: "Supporters hold tokens to signal alignment. Their conviction is measured and rewarded — not just held.",
-                },
-                {
-                  step: "04",
-                  title: "Benefits Flow",
-                  desc: "Discounts, experiences, and access activate for token holders. The more you participate, the more you earn.",
-                },
+                { step: "01", title: "Define Connection", desc: "Name what you stand for — your community, cause, or culture. That becomes your token's identity." },
+                { step: "02", title: "Mint Token", desc: "Connection rights are issued on-chain. Tradeable, verifiable, and interoperable across the ecosystem." },
+                { step: "03", title: "Participate", desc: "Supporters hold tokens to signal alignment. Their conviction is measured and rewarded — not just held." },
+                { step: "04", title: "Benefits Flow", desc: "Discounts, experiences, and access activate for token holders. The more you participate, the more you earn." },
               ].map((s, i) => (
                 <motion.div
                   key={s.step}
@@ -812,150 +772,15 @@ export default function ResponsiveBackground() {
                     {s.step}
                   </div>
                   <h3 className="text-lg font-bold mb-2">{s.title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    {s.desc}
-                  </p>
+                  <p className="text-sm text-slate-500 leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
             </div>
           </div>
-
-          {/* Why it works */}
-          <div className="grid md:grid-cols-3 gap-6 pt-10">
-            {[
-              "Align incentives without extraction.",
-              "Unlock real benefits instead of speculation.",
-              "Interoperable across projects.",
-            ].map((t) => (
-              <div
-                key={t}
-                className="bg-gradient-to-br from-white to-rose-50 border border-rose-100 rounded-2xl p-6 text-center font-medium"
-              >
-                {t}
-              </div>
-            ))}
-          </div>
         </div>
       </motion.section>
 
-      {/* ─── USE CASES ───────────────────────────────────────────────────── */}
-      <motion.section
-        id="usecases"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={sectionVariants}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-white px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
-      >
-        <div className="max-w-6xl mx-auto space-y-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={fadeInUpVariants}
-            transition={{ duration: reduceMotion ? 0 : 0.6 }}
-            className="text-center space-y-3"
-          >
-            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
-              Where iRWA fits
-            </span>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Built for real-world missions
-            </h2>
-            <p className="text-black/65 text-base md:text-lg max-w-2xl mx-auto">
-              Any project where value comes from belief, community, or story —
-              not just capital.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: "🌍",
-                title: "ESG & Impact",
-                desc: "Reward communities for environmental and social outcomes. Turn purpose into participation.",
-              },
-              {
-                icon: "🎭",
-                title: "Culture & Community",
-                desc: "Tokenize fandom, loyalty, and belonging. Give communities real stakes in what they love.",
-              },
-              {
-                icon: "🔗",
-                title: "Ethical Supply Chains",
-                desc: "Connect consumers to provenance. Let belief in sourcing become a tradeable signal.",
-              },
-            ].map((u, i) => (
-              <motion.div
-                key={u.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 space-y-4"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-2xl">
-                  {u.icon}
-                </div>
-                <h3 className="text-xl font-bold">{u.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
-                  {u.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ─── PARTICIPATION ENGINE ─────────────────────────────────────────── */}
-      <motion.section
-        id="participation"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={sectionVariants}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="scroll-mt-24 bg-white px-4 md:px-8 lg:px-24 py-16 md:py-20 lg:py-24"
-      >
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-3">
-            <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-[#ff272a]">
-              What you get
-            </span>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Participation Engine
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              Belief earns real benefits. Not just tokens — access, experiences,
-              and status.
-            </p>
-          </div>
-
-          <div className="w-full overflow-x-auto snap-x snap-mandatory scroll-smooth overscroll-x-contain touch-pan-x pb-2">
-            <div className="flex gap-4 md:gap-6 pr-4 md:pr-0">
-              {cards.map((card) => (
-                <div
-                  key={card.title}
-                  className="min-w-[88%] md:min-w-[48%] lg:min-w-[32%] snap-center rounded-3xl border border-rose-100 bg-gradient-to-br from-white to-rose-50/40 p-8 md:p-10 shadow-sm space-y-4"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#ff272a] to-[#ff7a45] flex items-center justify-center text-2xl shadow-sm">
-                    {card.icon}
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold">
-                    {card.title}
-                  </h3>
-                  <p className="text-slate-600 text-base md:text-lg leading-relaxed">
-                    {card.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ─── FAQ — accordion ─────────────────────────────────────────────── */}
+      {/* ─── FAQ ─────────────────────────────────────────────────────────── */}
       <motion.section
         id="faq"
         initial="hidden"
@@ -963,7 +788,7 @@ export default function ResponsiveBackground() {
         viewport={{ once: true, amount: 0.15 }}
         variants={sectionVariants}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="scroll-mt-24 bg-[#f8fafc] px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
+        className="scroll-mt-24 bg-white px-4 md:px-8 lg:px-24 py-12 md:py-20 lg:py-28"
       >
         <div className="max-w-4xl mx-auto space-y-8">
           <motion.div
@@ -978,29 +803,22 @@ export default function ResponsiveBackground() {
               Common questions
             </span>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Frequently Asked
+              Frequently Asked Questions
             </h2>
-            <p className="text-black/65 text-base md:text-lg">
-              Clear answers on what iRWA is, how it works, and why it matters.
-            </p>
           </motion.div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
               <div
                 key={faq.q}
-                className="bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden"
+                className="bg-[#f8fafc] rounded-2xl border border-black/5 overflow-hidden"
               >
                 <button
                   type="button"
-                  onClick={() =>
-                    setOpenFaq(openFaq === idx ? null : idx)
-                  }
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   className="w-full flex items-center justify-between p-6 md:p-8 text-left"
                 >
-                  <h3 className="text-lg md:text-xl font-bold pr-4">
-                    {faq.q}
-                  </h3>
+                  <h3 className="text-lg md:text-xl font-bold pr-4">{faq.q}</h3>
                   <motion.span
                     animate={{ rotate: openFaq === idx ? 45 : 0 }}
                     transition={{ duration: 0.2 }}
@@ -1018,7 +836,7 @@ export default function ResponsiveBackground() {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <p className="px-6 md:px-8 pb-6 md:pb-8 text-black/60 leading-relaxed">
+                      <p className="px-6 md:px-8 pb-6 md:pb-8 text-slate-600 leading-relaxed">
                         {faq.a}
                       </p>
                     </motion.div>
@@ -1030,7 +848,7 @@ export default function ResponsiveBackground() {
         </div>
       </motion.section>
 
-      {/* ─── CTA — dark with ticker + dot texture ────────────────────────── */}
+      {/* ─── CTA — email input, no legal line ────────────────────────────── */}
       <motion.section
         id="cta"
         initial="hidden"
@@ -1040,28 +858,34 @@ export default function ResponsiveBackground() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="scroll-mt-24 bg-[#0b0f19] px-4 md:px-8 lg:px-24 py-16 md:py-24 lg:py-28 relative overflow-hidden"
       >
-        {/* Network dot texture */}
         <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle,#ffffff_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
         <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-[#ff272a]/8 blur-3xl rounded-full pointer-events-none" />
         <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-indigo-900/30 blur-3xl rounded-full pointer-events-none" />
 
-        {/* Mock token ticker */}
-        <div className="absolute top-6 left-0 right-0 flex justify-center pointer-events-none">
-          <div className="flex items-center gap-6 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-white/40 font-mono">
-            <span>
-              BYOU{" "}
-              <span className="text-emerald-400">▲ 2.4%</span>
-            </span>
-            <span className="text-white/20">·</span>
-            <span>
-              ZUTT{" "}
-              <span className="text-emerald-400">▲ 1.1%</span>
-            </span>
-            <span className="text-white/20">·</span>
-            <span>
-              EVMN <span className="text-slate-400">— TBA</span>
-            </span>
-          </div>
+        {/* Scrolling token ticker */}
+        <div className="absolute top-0 left-0 right-0 overflow-hidden border-b border-white/10 pointer-events-none">
+          <motion.div
+            className="flex gap-10 py-2.5 text-xs font-mono text-white/40 whitespace-nowrap"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          >
+            {[...Array(2)].map((_, rep) => (
+              <span key={rep} className="flex gap-10">
+                <span>BYOU <span className="text-emerald-400 font-semibold">▲ 2.4%</span></span>
+                <span className="text-white/20">·</span>
+                <span>ZUTT <span className="text-emerald-400 font-semibold">▲ 1.1%</span></span>
+                <span className="text-white/20">·</span>
+                <span>EVMN <span className="text-white/30">— TBA</span></span>
+                <span className="text-white/20">·</span>
+                <span>iRWA Exchange <span className="text-white/25">live</span></span>
+                <span className="text-white/20">·</span>
+                <span>1,059 holders <span className="text-rose-400 font-semibold">↑</span></span>
+                <span className="text-white/20">·</span>
+                <span>3 projects <span className="text-white/25">on-chain</span></span>
+                <span className="text-white/20">·</span>
+              </span>
+            ))}
+          </motion.div>
         </div>
 
         <motion.div
@@ -1070,34 +894,49 @@ export default function ResponsiveBackground() {
           viewport={viewportOnce}
           variants={fadeInUpVariants}
           transition={{ duration: reduceMotion ? 0 : 0.6 }}
-          className="max-w-5xl mx-auto text-center space-y-8 relative z-10 pt-8"
+          className="max-w-3xl mx-auto text-center space-y-8 relative z-10 pt-14"
         >
           <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
-            Build your iRWA project with us.
+            Build your iRWA project.
           </h2>
-          <p className="text-white/70 text-base md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Launch a tokenized connection economy that rewards communities and
-            creates measurable impact.
+          <p className="text-white/65 text-base md:text-xl leading-relaxed">
+            Drop your email and we'll reach out within 24 hours to explore what your belief economy could look like.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="mailto:hello@irwa.io?subject=Demo request"
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-[#ff272a] px-7 py-4 font-semibold text-white shadow-lg hover:shadow-xl transition"
+          {emailSent ? (
+            <div className="rounded-2xl bg-white/10 border border-white/20 px-8 py-6 text-white font-semibold text-lg">
+              Thanks — we'll be in touch soon.
+            </div>
+          ) : (
+            <form
+              onSubmit={handleEmailSubmit}
+              className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
             >
-              Request a demo
-            </a>
+              <input
+                type="email"
+                required
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 rounded-2xl bg-white/10 border border-white/20 px-5 py-4 text-white placeholder-white/40 outline-none focus:border-[#ff272a] focus:bg-white/15 transition"
+              />
+              <button
+                type="submit"
+                className="rounded-2xl bg-[#ff272a] px-7 py-4 font-semibold text-white hover:bg-[#e02020] transition whitespace-nowrap"
+              >
+                Get in touch
+              </button>
+            </form>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <a
               href="/evolution"
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 font-semibold text-black hover:opacity-90 transition"
+              className="text-white/50 hover:text-white/80 text-sm transition underline underline-offset-4"
             >
-              Read our story
+              Read our story →
             </a>
           </div>
-
-          <p className="text-white/50 text-sm">
-            By continuing, you agree to our terms and privacy policy.
-          </p>
         </motion.div>
       </motion.section>
 
